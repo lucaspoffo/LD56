@@ -1,0 +1,7 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://t8fcjuo6uvvs"]
+
+[ext_resource type="FontFile" uid="uid://booq8f0dtft17" path="res://assets/m3x6.ttf" id="1_apktc"]
+
+[resource]
+default_font = ExtResource("1_apktc")
+default_font_size = 16
