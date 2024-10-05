@@ -1,7 +1,57 @@
-[gd_scene load_steps=4 format=3 uid="uid://0f1g2ycnfmk2"]
+[gd_scene load_steps=11 format=3 uid="uid://0f1g2ycnfmk2"]
 
 [ext_resource type="Script" path="res://scenes/player_corpse.gd" id="1_r8abm"]
-[ext_resource type="Texture2D" uid="uid://dp6mcv6ebuxw" path="res://icon.svg" id="1_uayqj"]
+[ext_resource type="Texture2D" uid="uid://bdhkie642bqqc" path="res://assets/Player.png" id="2_iryof"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ceh2e"]
+atlas = ExtResource("2_iryof")
+region = Rect2(0, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uyu0l"]
+atlas = ExtResource("2_iryof")
+region = Rect2(16, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6d3n3"]
+atlas = ExtResource("2_iryof")
+region = Rect2(32, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kqb86"]
+atlas = ExtResource("2_iryof")
+region = Rect2(48, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lvlel"]
+atlas = ExtResource("2_iryof")
+region = Rect2(64, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nnoxa"]
+atlas = ExtResource("2_iryof")
+region = Rect2(80, 32, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jxm80"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ceh2e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uyu0l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6d3n3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kqb86")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lvlel")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nnoxa")
+}],
+"loop": false,
+"name": &"Death",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qxq6u"]
 size = Vector2(8, 8)
@@ -9,12 +59,12 @@ size = Vector2(8, 8)
 [node name="PlayerCorpse" type="Node2D" groups=["player-corpse"]]
 script = ExtResource("1_r8abm")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(1, 0, 0.0870991, 1)
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("1_uayqj")
-
 [node name="Area2D" type="Area2D" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Area2D"]
+sprite_frames = SubResource("SpriteFrames_jxm80")
+animation = &"Death"
+autoplay = "Death"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("RectangleShape2D_qxq6u")
