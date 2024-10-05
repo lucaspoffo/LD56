@@ -1,0 +1,46 @@
+[gd_scene load_steps=7 format=3 uid="uid://bkyx5tyrqf05u"]
+
+[ext_resource type="Script" path="res://game.gd" id="1_k40o2"]
+[ext_resource type="PackedScene" uid="uid://4a1w5yvetjdt" path="res://scenes/player.tscn" id="1_tatke"]
+[ext_resource type="PackedScene" uid="uid://drmtq8d0ylgpo" path="res://scenes/camera_view.tscn" id="2_elgy0"]
+[ext_resource type="PackedScene" uid="uid://b7xqxi073757f" path="res://scenes/wander_mob.tscn" id="3_sqjrq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_36hjg"]
+size = Vector2(90, 74)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_do15i"]
+size = Vector2(90, 42)
+
+[node name="Game" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_k40o2")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(160, 120)
+position_smoothing_enabled = true
+position_smoothing_speed = 6.0
+
+[node name="WanderMob" parent="." instance=ExtResource("3_sqjrq")]
+position = Vector2(208, 144)
+
+[node name="Player" parent="." instance=ExtResource("1_tatke")]
+position = Vector2(72, 55)
+
+[node name="CameraViews" type="Node2D" parent="."]
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
+
+[node name="CameraView" parent="CameraViews" instance=ExtResource("2_elgy0")]
+
+[node name="Grass" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Grass"]
+position = Vector2(51, 43)
+shape = SubResource("RectangleShape2D_36hjg")
+
+[node name="Shit" type="Area2D" parent="." groups=["shit-area"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Shit"]
+position = Vector2(51, 123)
+shape = SubResource("RectangleShape2D_do15i")
+debug_color = Color(0.582031, 0.356662, 0.167146, 0.42)

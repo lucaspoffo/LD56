@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://0f1g2ycnfmk2"]
+
+[ext_resource type="Script" path="res://scenes/player_corpse.gd" id="1_r8abm"]
+[ext_resource type="Texture2D" uid="uid://dp6mcv6ebuxw" path="res://icon.svg" id="1_uayqj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qxq6u"]
+size = Vector2(8, 8)
+
+[node name="PlayerCorpse" type="Node2D" groups=["player-corpse"]]
+script = ExtResource("1_r8abm")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 0, 0.0870991, 1)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("1_uayqj")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_qxq6u")
+
+[node name="CorpseDuration" type="Timer" parent="."]
+wait_time = 15.0
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="CorpseDuration" to="." method="_on_corpse_duration_timeout"]
