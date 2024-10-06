@@ -1,13 +1,63 @@
-[gd_scene load_steps=5 format=3 uid="uid://b7xqxi073757f"]
+[gd_scene load_steps=12 format=3 uid="uid://b7xqxi073757f"]
 
-[ext_resource type="Texture2D" uid="uid://dp6mcv6ebuxw" path="res://icon.svg" id="1_5uobs"]
 [ext_resource type="Script" path="res://scenes/wander_mob.gd" id="1_m734t"]
+[ext_resource type="Texture2D" uid="uid://ddkouvet6yask" path="res://assets/Monster.png" id="2_w4t7i"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ickx0"]
+atlas = ExtResource("2_w4t7i")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_00icy"]
+atlas = ExtResource("2_w4t7i")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s8tdf"]
+atlas = ExtResource("2_w4t7i")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uu3pt"]
+atlas = ExtResource("2_w4t7i")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yrjmf"]
+atlas = ExtResource("2_w4t7i")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_15dwp"]
+atlas = ExtResource("2_w4t7i")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_uafxe"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ickx0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_00icy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s8tdf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uu3pt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yrjmf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_15dwp")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0wpsl"]
-size = Vector2(32, 32)
+size = Vector2(26, 23)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_50ghg"]
-radius = 32.0
+radius = 13.1529
 
 [node name="WanderMob" type="CharacterBody2D" groups=["wander-mob"]]
 z_index = 1
@@ -16,13 +66,13 @@ motion_mode = 1
 script = ExtResource("1_m734t")
 metadata/_edit_group_ = true
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(0.0735248, 1, 0, 1)
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
-scale = Vector2(0.25, 0.25)
-texture = ExtResource("1_5uobs")
+sprite_frames = SubResource("SpriteFrames_uafxe")
+autoplay = "default"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1.5)
 shape = SubResource("RectangleShape2D_0wpsl")
 
 [node name="AfraidTimer" type="Timer" parent="."]
@@ -36,4 +86,5 @@ one_shot = true
 [node name="KillArea" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="KillArea"]
+position = Vector2(0, 2)
 shape = SubResource("CircleShape2D_50ghg")

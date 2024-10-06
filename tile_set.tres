@@ -1,8 +1,8 @@
-[gd_resource type="TileSet" load_steps=7 format=3 uid="uid://cbc2xmn4ikkgp"]
+[gd_resource type="TileSet" load_steps=7 format=3 uid="uid://dyi4eykb5ol1e"]
 
 [ext_resource type="Texture2D" uid="uid://n0ylvufrgxcn" path="res://assets/Ground.png" id="1_xpcrt"]
 [ext_resource type="Texture2D" uid="uid://dp6mcv6ebuxw" path="res://icon.svg" id="2_j5mab"]
-[ext_resource type="PackedScene" uid="uid://dhewlg211364t" path="res://scenes/vines.tscn" id="3_m5147"]
+[ext_resource type="PackedScene" path="res://scenes/vines.tscn" id="3_m5147"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xuof0"]
 texture = ExtResource("1_xpcrt")
