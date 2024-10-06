@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=4 uid="uid://bkyx5tyrqf05u"]
+[gd_scene load_steps=10 format=4 uid="uid://bkyx5tyrqf05u"]
 
 [ext_resource type="Script" path="res://game.gd" id="1_k40o2"]
 [ext_resource type="PackedScene" uid="uid://4a1w5yvetjdt" path="res://scenes/player.tscn" id="1_tatke"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://drmtq8d0ylgpo" path="res://scenes/camera_view.tscn" id="2_elgy0"]
 [ext_resource type="PackedScene" uid="uid://b7xqxi073757f" path="res://scenes/wander_mob.tscn" id="3_sqjrq"]
 [ext_resource type="PackedScene" uid="uid://bihrekvmn1n76" path="res://scenes/mushroom.tscn" id="6_iysmo"]
+[ext_resource type="PackedScene" uid="uid://boxxj8h6saj2u" path="res://scenes/mushroom_gas.tscn" id="7_pdggr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_36hjg"]
 size = Vector2(80, 64)
@@ -57,3 +58,6 @@ debug_color = Color(0.582031, 0.356662, 0.167146, 0.42)
 
 [node name="Mushroom" parent="." instance=ExtResource("6_iysmo")]
 position = Vector2(-64, 48)
+
+[node name="MushroomGas" parent="." instance=ExtResource("7_pdggr")]
+position = Vector2(16, -64)

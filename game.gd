@@ -2,10 +2,11 @@ extends Node2D
 
 var PLAYER_CORPSE_SCENE := preload("res://scenes/player_corpse.tscn")
 var MUSHROOM_PROJECTILE_SCENE := preload("res://scenes/mushroom_projectile.tscn")
+var MUSHROOM_GAS_SCENE := preload("res://scenes/mushroom_gas.tscn")
 
 @export var PLAYER_SPEED: float = 100
+@export var PLAYER_POISON_SPEED: float = 70
 @export var SPIT_SPEED: float = 200
-@export var SHIT_DURATION: float = 5
 
 @export var WANDER_MOB_SPEED: float = 50
 @export var WANDER_MOB_CHASE_RANGE: float = 120
@@ -39,7 +40,10 @@ func _physics_process(delta: float) -> void:
 		Player.State.NORMAL:
 			player.set_collision_mask_value(4, true) # enable hole collsion
 			var input_direction = Input.get_vector("left", "right", "up", "down")
-			player.velocity = input_direction * PLAYER_SPEED
+			var speed := PLAYER_SPEED
+			if player.has_poison:
+				speed = PLAYER_POISON_SPEED
+			player.velocity = input_direction * speed
 			player.move_and_slide()
 			if input_direction:
 				player.animated_sprite.flip_h = input_direction.x > 0
@@ -69,9 +73,7 @@ func _physics_process(delta: float) -> void:
 	# Check in shit
 	for shit in shit_areas:
 		if shit.overlaps_body(player):
-			player.has_shit = true
-			player.shit_timer.start(SHIT_DURATION)
-			player.modulate = Color.SADDLE_BROWN
+			poison_player()
 	
 	# Update WanderMobs
 	for mob in wander_mobs:
@@ -109,7 +111,7 @@ func _physics_process(delta: float) -> void:
 					mob.state = WanderMob.State.WANDER
 					continue
 				if mob.kill_area.overlaps_body(player):
-					if player.has_shit:
+					if player.has_poison:
 						var direction = mob.global_position.direction_to(player.global_position)
 						var destination = mob.global_position + direction.normalized() * SPIT_DISTANCE
 						player.spit_destination = destination
@@ -132,10 +134,12 @@ func _physics_process(delta: float) -> void:
 				if mushroom.stomp_area.overlaps_body(player) and mushroom.stomp_cd.time_left == 0:
 					mushroom.state = Mushroom.State.STOMP
 					mushroom.animated_sprite.play("Stomp")
+					mushroom.stomp_cd.start()
 					continue
 				if mushroom.shoot_area.overlaps_body(player) and !mushroom.stomp_area.overlaps_body(player) and mushroom.shoot_cd.time_left == 0:
 					mushroom.state = Mushroom.State.SHOOT
 					mushroom.animated_sprite.play("Shoot")
+					mushroom.shoot_cd.start()
 					continue
 			Mushroom.State.SHOOT:
 				if !mushroom.animated_sprite.is_playing():
@@ -145,11 +149,15 @@ func _physics_process(delta: float) -> void:
 					projectile.global_position = mushroom.global_position
 					add_child(projectile)
 					mushroom.state = Mushroom.State.IDLE
-					mushroom.shoot_cd.start()
+					
 			Mushroom.State.STOMP:
 				if !mushroom.animated_sprite.is_playing():
+					if mushroom.stomp_area.overlaps_body(player):
+						poison_player()
+					var gas = MUSHROOM_GAS_SCENE.instantiate()
+					mushroom.add_child(gas)
 					mushroom.state = Mushroom.State.IDLE
-					mushroom.stomp_cd.start()
+					
 	
 	# Update Mushroom projectiles
 	var projectile_mushrooms: Array[MushroomProjectile]
@@ -185,11 +193,19 @@ func _physics_process(delta: float) -> void:
 		camera.global_position = position
 	else:
 		camera.global_position = player.global_position
-		
+
+func poison_player():
+	player.has_poison = true
+	player.poison_timer.start()
+	player.modulate = Color.DARK_GREEN
+
 func kill_player():
 	var corpse = PLAYER_CORPSE_SCENE.instantiate()
 	corpse.global_position = player.global_position
 	add_child(corpse)
-	player.reset()
+	
+	player.has_poison = false
+	player.poison_timer.stop()
+	player.modulate = Color.WHITE
 	player.global_position = player_start_position
 	

@@ -5,18 +5,13 @@ enum State {
 	SPIT
 }
 
-@onready var shit_timer: Timer = $ShitTimer
+@onready var poison_timer: Timer = $PoisonTimer
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 var state: State = State.NORMAL
-var has_shit := false 
-var spit_destination: Vector2
-
-func reset():
-	has_shit = false
-	shit_timer.stop()
-	modulate = Color.WHITE
+var has_poison := false 
+var spit_destination: Vector2	
 
 func _on_shit_timer_timeout() -> void:
-	has_shit = false
+	has_poison = false
 	modulate = Color.WHITE
