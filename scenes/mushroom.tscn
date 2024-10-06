@@ -1,0 +1,92 @@
+[gd_scene load_steps=7 format=3 uid="uid://bihrekvmn1n76"]
+
+[ext_resource type="Script" path="res://scenes/mushroom.gd" id="1_c3b7x"]
+[ext_resource type="Texture2D" uid="uid://dp6mcv6ebuxw" path="res://icon.svg" id="2_w5dpu"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yjxyp"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_w5dpu")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_w5dpu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_w5dpu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_w5dpu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_w5dpu")
+}],
+"loop": false,
+"name": &"Shoot",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_w5dpu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_w5dpu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_w5dpu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_w5dpu")
+}],
+"loop": false,
+"name": &"Stomp",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_8y2eh"]
+radius = 16.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_56jsb"]
+radius = 50.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qr165"]
+radius = 160.0
+
+[node name="Mushroom" type="StaticBody2D" groups=["mushroom"]]
+script = ExtResource("1_c3b7x")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_yjxyp")
+animation = &"Shoot"
+autoplay = "Idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_8y2eh")
+
+[node name="StompRange" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StompRange"]
+shape = SubResource("CircleShape2D_56jsb")
+debug_color = Color(0.7, 0.529677, 0.545368, 0.42)
+
+[node name="ShootRange" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ShootRange"]
+shape = SubResource("CircleShape2D_qr165")
+debug_color = Color(0.7, 0.423931, 0.263321, 0.42)
+
+[node name="StompCD" type="Timer" parent="."]
+process_callback = 0
+wait_time = 5.0
+one_shot = true
+
+[node name="ShootCD" type="Timer" parent="."]
+process_callback = 0
+wait_time = 4.0
+one_shot = true

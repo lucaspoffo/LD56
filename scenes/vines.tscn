@@ -1,0 +1,46 @@
+[gd_scene load_steps=5 format=3 uid="uid://dhewlg211364t"]
+
+[ext_resource type="Texture2D" uid="uid://dp6mcv6ebuxw" path="res://icon.svg" id="1_8o31u"]
+[ext_resource type="Script" path="res://scenes/vines.gd" id="1_n5v32"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5vrl3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_8o31u")
+}],
+"loop": false,
+"name": &"Death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_8o31u")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fnrbj"]
+size = Vector2(16, 16)
+
+[node name="Vines" type="StaticBody2D"]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_n5v32")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+modulate = Color(0, 1, 0, 1)
+scale = Vector2(0.125, 0.125)
+sprite_frames = SubResource("SpriteFrames_5vrl3")
+animation = &"Idle"
+autoplay = "Idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_fnrbj")
+
+[node name="DeathTimer" type="Timer" parent="."]
+wait_time = 10.0
+
+[connection signal="timeout" from="DeathTimer" to="." method="_on_death_duration_timeout"]

@@ -6,6 +6,7 @@ enum State {
 }
 
 @onready var shit_timer: Timer = $ShitTimer
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 var state: State = State.NORMAL
 var has_shit := false 

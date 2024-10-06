@@ -1,43 +1,57 @@
 extends Node2D
 
 var PLAYER_CORPSE_SCENE := preload("res://scenes/player_corpse.tscn")
+var MUSHROOM_PROJECTILE_SCENE := preload("res://scenes/mushroom_projectile.tscn")
 
 @export var PLAYER_SPEED: float = 100
 @export var SPIT_SPEED: float = 200
 @export var SHIT_DURATION: float = 5
 
 @export var WANDER_MOB_SPEED: float = 50
+@export var WANDER_MOB_CHASE_RANGE: float = 120
 @export var WANDER_MOB_CHASE_SPEED: float = 150
+@export var WANDER_MOB_CHASE_DISTANCE: float = 150
 @export var WANDER_MOB_AFRAID_RANGE: float = 60
 @export var SPIT_DISTANCE: float = 200
+
+@export var MUSHROOM_PROJECTILE_SPEED := 200
 
 @onready var player: Player = $Player
 @onready var camera: Camera2D = $Camera2D
 @onready var grass: Area2D = $Grass
 var wander_mobs: Array[WanderMob]
+var mushrooms: Array[Mushroom]
 var camera_views: Array[CameraView]
 var shit_areas: Array[Area2D]
 
 @onready var player_start_position = player.global_position
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	camera_views.assign(get_tree().get_nodes_in_group("camera-view"))
 	wander_mobs.assign(get_tree().get_nodes_in_group("wander-mob"))
 	shit_areas.assign(get_tree().get_nodes_in_group("shit-area"))
+	mushrooms.assign(get_tree().get_nodes_in_group("mushroom"))
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
 	# Update player
 	match player.state:
 		Player.State.NORMAL:
+			player.set_collision_mask_value(4, true) # enable hole collsion
 			var input_direction = Input.get_vector("left", "right", "up", "down")
 			player.velocity = input_direction * PLAYER_SPEED
 			player.move_and_slide()
+			if input_direction:
+				player.animated_sprite.flip_h = input_direction.x > 0
+				player.animated_sprite.play("Run")
+			else:
+				player.animated_sprite.play("Idle")
+				
 		Player.State.SPIT:
+			player.set_collision_mask_value(4, false) # disable hole collsion
 			var direction = (player.spit_destination - player.global_position).normalized()
 			player.velocity = direction * SPIT_SPEED
 			player.move_and_slide()
-			print(player.global_position.distance_to(player.spit_destination))
 			if player.global_position.distance_to(player.spit_destination) < 5:
 				player.state = Player.State.NORMAL
 	
@@ -59,15 +73,14 @@ func _physics_process(delta: float) -> void:
 			player.shit_timer.start(SHIT_DURATION)
 			player.modulate = Color.SADDLE_BROWN
 	
-	# Update mobs
+	# Update WanderMobs
 	for mob in wander_mobs:
-		
 		match mob.state:
 			WanderMob.State.WANDER:
 				#if mob.global_position.distance_to(player.global_position) < WANDER_MOB_AFRAID_RANGE:
 				#	mob.state = WanderMob.State.AFRAID
 				#	continue
-				if !player_in_grass and mob.global_position.distance_to(player.global_position) < WANDER_MOB_AFRAID_RANGE * 2:
+				if !player_in_grass and mob.global_position.distance_to(player.global_position) < WANDER_MOB_CHASE_RANGE:
 					mob.state = WanderMob.State.CHASE
 					continue
 				if mob.wander_timer.time_left == 0:
@@ -86,13 +99,13 @@ func _physics_process(delta: float) -> void:
 						mob.state = WanderMob.State.WANDER
 						mob.wander_timer.start(0)
 						continue
-			
 				
 				var direction = player.global_position.direction_to(mob.global_position)
 				mob.velocity = direction * WANDER_MOB_SPEED
 				mob.move_and_slide()
 			WanderMob.State.CHASE:
-				if player_in_grass || player_being_spat:
+				var player_distance := mob.global_position.distance_to(player.global_position)
+				if player_in_grass || player_being_spat || player_distance > WANDER_MOB_CHASE_DISTANCE:
 					mob.state = WanderMob.State.WANDER
 					continue
 				if mob.kill_area.overlaps_body(player):
@@ -110,7 +123,50 @@ func _physics_process(delta: float) -> void:
 				var direction = mob.global_position.direction_to(player.global_position)
 				mob.velocity = direction * WANDER_MOB_CHASE_SPEED
 				mob.move_and_slide()
-				
+	
+	# Update Mushrooms
+	for mushroom in mushrooms:
+		match mushroom.state:
+			Mushroom.State.IDLE:
+				mushroom.animated_sprite.play("Idle")
+				if mushroom.stomp_area.overlaps_body(player) and mushroom.stomp_cd.time_left == 0:
+					mushroom.state = Mushroom.State.STOMP
+					mushroom.animated_sprite.play("Stomp")
+					continue
+				if mushroom.shoot_area.overlaps_body(player) and !mushroom.stomp_area.overlaps_body(player) and mushroom.shoot_cd.time_left == 0:
+					mushroom.state = Mushroom.State.SHOOT
+					mushroom.animated_sprite.play("Shoot")
+					continue
+			Mushroom.State.SHOOT:
+				if !mushroom.animated_sprite.is_playing():
+					var projectile := MUSHROOM_PROJECTILE_SCENE.instantiate()
+					var direction = mushroom.global_position.direction_to(player.global_position)
+					projectile.direction = direction
+					projectile.global_position = mushroom.global_position
+					add_child(projectile)
+					mushroom.state = Mushroom.State.IDLE
+					mushroom.shoot_cd.start()
+			Mushroom.State.STOMP:
+				if !mushroom.animated_sprite.is_playing():
+					mushroom.state = Mushroom.State.IDLE
+					mushroom.stomp_cd.start()
+	
+	# Update Mushroom projectiles
+	var projectile_mushrooms: Array[MushroomProjectile]
+	projectile_mushrooms.assign(get_tree().get_nodes_in_group("mushroom-projectile"))
+	for projectile in projectile_mushrooms:
+		projectile.global_position += projectile.direction * MUSHROOM_PROJECTILE_SPEED * delta
+		var bodies := projectile.area.get_overlapping_bodies()
+		for body in bodies:
+			if body is not Mushroom:
+				projectile.queue_free()
+			if body is Player:
+				kill_player()
+			if body is Vine:
+				body.animated_sprite.play("Death")
+				body.collision.disabled = true
+				body.animated_sprite.modulate = Color(0, 1, 0, .1)
+				body.death_timer.start()
 	
 	var active_view: CameraView = null
 	var view_rect: Rect2i = Rect2i()
