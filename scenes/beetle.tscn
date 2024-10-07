@@ -1,0 +1,116 @@
+[gd_scene load_steps=15 format=3 uid="uid://c0mj86crs7n2m"]
+
+[ext_resource type="Script" path="res://scenes/beetle.gd" id="1_ioh23"]
+[ext_resource type="Texture2D" uid="uid://ddkouvet6yask" path="res://assets/Monster.png" id="2_bpde1"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jgw0v"]
+atlas = ExtResource("2_bpde1")
+region = Rect2(0, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2d6b8"]
+atlas = ExtResource("2_bpde1")
+region = Rect2(32, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ibxps"]
+atlas = ExtResource("2_bpde1")
+region = Rect2(64, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bfu80"]
+atlas = ExtResource("2_bpde1")
+region = Rect2(96, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mhkwn"]
+atlas = ExtResource("2_bpde1")
+region = Rect2(0, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gpqtk"]
+atlas = ExtResource("2_bpde1")
+region = Rect2(32, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ylhnq"]
+atlas = ExtResource("2_bpde1")
+region = Rect2(64, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lrtmt"]
+atlas = ExtResource("2_bpde1")
+region = Rect2(96, 128, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_j6gdm"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jgw0v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2d6b8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ibxps")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bfu80")
+}],
+"loop": true,
+"name": &"Chase",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mhkwn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gpqtk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ylhnq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lrtmt")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 10.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tit2k"]
+radius = 9.0
+height = 32.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4583m"]
+radius = 113.004
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_303ov"]
+radius = 19.0
+
+[node name="Beetle" type="CharacterBody2D" groups=["beetle"]]
+collision_layer = 18
+collision_mask = 30
+motion_mode = 1
+script = ExtResource("1_ioh23")
+
+[node name="Head" type="Node2D" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Head"]
+rotation = -1.5708
+sprite_frames = SubResource("SpriteFrames_j6gdm")
+animation = &"Idle"
+autoplay = "Idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_tit2k")
+
+[node name="ChaseArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ChaseArea"]
+shape = SubResource("CircleShape2D_4583m")
+debug_color = Color(0.7, 0.545727, 0.482072, 0.42)
+
+[node name="KillArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KillArea"]
+shape = SubResource("CircleShape2D_303ov")
+
+[node name="ReturnSpawnTimer" type="Timer" parent="."]
+wait_time = 15.0
+one_shot = true

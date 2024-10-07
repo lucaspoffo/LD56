@@ -1,18 +1,19 @@
 [gd_scene load_steps=4 format=3 uid="uid://dovou2j17d7s5"]
 
 [ext_resource type="Script" path="res://scenes/mushroom_projectile.gd" id="1_4rl3f"]
-[ext_resource type="Texture2D" uid="uid://dp6mcv6ebuxw" path="res://icon.svg" id="1_secqn"]
+[ext_resource type="Texture2D" uid="uid://n0ylvufrgxcn" path="res://assets/Ground.png" id="2_abio5"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_stp8h"]
-radius = 6.0
+radius = 4.0
 
 [node name="MushroomProjectile" type="Node2D" groups=["mushroom-projectile"]]
 script = ExtResource("1_4rl3f")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(1, 0.0662082, 0, 1)
-scale = Vector2(0.09375, 0.09375)
-texture = ExtResource("1_secqn")
+texture_filter = 1
+texture = ExtResource("2_abio5")
+region_enabled = true
+region_rect = Rect2(0, 144, 16, 16)
 
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 0

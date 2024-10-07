@@ -7,6 +7,7 @@ enum State {
 
 @onready var poison_timer: Timer = $PoisonTimer
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var grass: AnimatedSprite2D = $Grass
 
 var state: State = State.NORMAL
 var has_poison := false 

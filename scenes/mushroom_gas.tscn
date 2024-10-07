@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://boxxj8h6saj2u"]
 
 [ext_resource type="Script" path="res://scenes/mushroom_gas.gd" id="1_a3nn0"]
-[ext_resource type="Texture2D" uid="uid://ieo7pjsbotr6" path="res://assets/smoke_01.png" id="1_j42df"]
+[ext_resource type="Texture2D" uid="uid://dn0donhvhr0ve" path="res://assets/smoke_03.png" id="2_qi4xf"]
 
 [sub_resource type="Curve" id="Curve_x3l78"]
 _data = [Vector2(0.00528169, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.00612903), -2.27837, 0.0, 0, 0]
@@ -33,8 +33,8 @@ initial_velocity_max = 100.0
 gravity = Vector3(0, 0, 0)
 damping_min = 100.0
 damping_max = 120.0
-scale_min = 0.1
-scale_max = 0.1
+scale_min = 3.0
+scale_max = 4.0
 scale_curve = SubResource("CurveTexture_xlars")
 color_ramp = SubResource("GradientTexture1D_irkhx")
 alpha_curve = SubResource("CurveTexture_xqfxf")
@@ -48,7 +48,7 @@ texture_filter = 1
 emitting = false
 amount = 64
 process_material = SubResource("ParticleProcessMaterial_bpb2k")
-texture = ExtResource("1_j42df")
+texture = ExtResource("2_qi4xf")
 one_shot = true
 explosiveness = 1.0
 

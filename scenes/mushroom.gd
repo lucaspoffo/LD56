@@ -7,6 +7,9 @@ enum State {
 }
 
 var state = State.IDLE
+var target: Node2D
+var shotted := false
+var stomped := false
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var shoot_area: Area2D = $ShootRange

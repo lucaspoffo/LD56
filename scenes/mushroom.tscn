@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://b88r237f6oc7j"]
+[gd_scene load_steps=40 format=3 uid="uid://bihrekvmn1n76"]
 
 [ext_resource type="Script" path="res://scenes/mushroom.gd" id="1_c3b7x"]
 [ext_resource type="Texture2D" uid="uid://ddkouvet6yask" path="res://assets/Monster.png" id="2_23lev"]
@@ -202,7 +202,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"Shoot",
-"speed": 20.0
+"speed": 15.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -249,19 +249,20 @@ animations = [{
 }],
 "loop": false,
 "name": &"Stomp",
-"speed": 5.0
+"speed": 15.0
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8y2eh"]
 radius = 16.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_56jsb"]
-radius = 50.0
+radius = 60.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qr165"]
-radius = 160.0
+radius = 180.0
 
 [node name="Mushroom" type="StaticBody2D" groups=["mushroom"]]
+collision_layer = 2
 script = ExtResource("1_c3b7x")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -274,12 +275,15 @@ autoplay = "Idle"
 shape = SubResource("CircleShape2D_8y2eh")
 
 [node name="StompRange" type="Area2D" parent="."]
+collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StompRange"]
 shape = SubResource("CircleShape2D_56jsb")
 debug_color = Color(0.7, 0.529677, 0.545368, 0.42)
 
 [node name="ShootRange" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 48
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ShootRange"]
 shape = SubResource("CircleShape2D_qr165")

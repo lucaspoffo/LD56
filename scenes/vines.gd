@@ -6,4 +6,4 @@ class_name Vine extends StaticBody2D
 
 func _on_death_duration_timeout() -> void:
 	collision.disabled = false
-	animated_sprite.modulate = Color.GREEN
+	animated_sprite.play("Spawn")

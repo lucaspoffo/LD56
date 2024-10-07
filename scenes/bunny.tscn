@@ -1,0 +1,52 @@
+[gd_scene load_steps=8 format=3 uid="uid://b04j174ydyd6w"]
+
+[ext_resource type="Texture2D" uid="uid://bdhkie642bqqc" path="res://assets/Player.png" id="1_1c7yu"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2yncd"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e3lml"]
+atlas = ExtResource("1_1c7yu")
+region = Rect2(0, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t13v8"]
+atlas = ExtResource("1_1c7yu")
+region = Rect2(16, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_88gho"]
+atlas = ExtResource("1_1c7yu")
+region = Rect2(32, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rwr54"]
+atlas = ExtResource("1_1c7yu")
+region = Rect2(48, 48, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2s41a"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e3lml")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t13v8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_88gho")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rwr54")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Bunny" type="Area2D" groups=["bunny"]]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_2yncd")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_2s41a")
+frame_progress = 0.66214

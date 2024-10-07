@@ -54,7 +54,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qxq6u"]
-size = Vector2(8, 8)
+size = Vector2(14, 14)
 
 [node name="PlayerCorpse" type="Node2D" groups=["player-corpse"]]
 script = ExtResource("1_r8abm")
