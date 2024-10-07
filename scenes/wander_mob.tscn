@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://b7xqxi073757f"]
+[gd_scene load_steps=17 format=3 uid="uid://b7xqxi073757f"]
 
 [ext_resource type="Script" path="res://scenes/wander_mob.gd" id="1_m734t"]
 [ext_resource type="Texture2D" uid="uid://ddkouvet6yask" path="res://assets/Monster.png" id="2_w4t7i"]
@@ -27,6 +27,26 @@ region = Rect2(128, 0, 32, 32)
 atlas = ExtResource("2_w4t7i")
 region = Rect2(160, 0, 32, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_crjq2"]
+atlas = ExtResource("2_w4t7i")
+region = Rect2(96, 160, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1ycjd"]
+atlas = ExtResource("2_w4t7i")
+region = Rect2(128, 160, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xt30u"]
+atlas = ExtResource("2_w4t7i")
+region = Rect2(160, 160, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ap7t5"]
+atlas = ExtResource("2_w4t7i")
+region = Rect2(192, 160, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_20il5"]
+atlas = ExtResource("2_w4t7i")
+region = Rect2(224, 160, 32, 32)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_uafxe"]
 animations = [{
 "frames": [{
@@ -49,8 +69,28 @@ animations = [{
 "texture": SubResource("AtlasTexture_15dwp")
 }],
 "loop": true,
-"name": &"default",
+"name": &"Default",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_crjq2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1ycjd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xt30u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ap7t5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_20il5")
+}],
+"loop": false,
+"name": &"Spit",
+"speed": 10.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0wpsl"]
@@ -69,7 +109,10 @@ metadata/_edit_group_ = true
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_uafxe")
-autoplay = "default"
+animation = &"Spit"
+autoplay = "Default"
+frame = 4
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 1.5)

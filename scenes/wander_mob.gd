@@ -11,6 +11,7 @@ enum State {
 @onready var afraid_timer: Timer = $AfraidTimer
 @onready var kill_area: Area2D = $KillArea
 @onready var initial_position: Vector2 = global_position
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 var state := State.WANDER
 var wander_destination: Vector2

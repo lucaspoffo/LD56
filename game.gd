@@ -23,6 +23,8 @@ var MUSHROOM_GAS_SCENE := preload("res://scenes/mushroom_gas.tscn")
 @onready var camera: Camera2D = $Camera2D
 @onready var tile_map: TileMapLayer = $TileMapLayer
 @onready var save_bunny_label: Label = $CanvasLayer/SaveBunnyLabel
+@onready var movement_label: Label = $CanvasLayer/MovementLabel
+@onready var win_control: Control = $CanvasLayer/WinControl
 
 var wander_mobs: Array[WanderMob]
 var mushrooms: Array[Mushroom]
@@ -30,7 +32,8 @@ var beetles: Array[Beetle]
 var camera_views: Array[CameraView]
 var poison_areas: Array[Area2D]
 
-var panning_camera := false
+var panning_bunnies_camera := false
+var won := false
 
 @onready var player_start_position = player.global_position
 
@@ -41,16 +44,19 @@ func _ready() -> void:
 	mushrooms.assign(get_tree().get_nodes_in_group("mushroom"))
 	beetles.assign(get_tree().get_nodes_in_group("beetle"))
 	
+	movement_label.visible = true
 	camera_pan_bunnies()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
-	if panning_camera:
+	if panning_bunnies_camera || won:
 		return
 	# Update player
 	match player.state:
 		Player.State.NORMAL:
 			player.set_collision_mask_value(4, true) # enable hole collision
+			player.set_collision_mask_value(2, true) # enable mob collision
+
 			var input_direction = Input.get_vector("left", "right", "up", "down")
 			var speed := PLAYER_SPEED
 			if player.has_poison:
@@ -65,11 +71,17 @@ func _physics_process(delta: float) -> void:
 				
 		Player.State.SPIT:
 			player.set_collision_mask_value(4, false) # disable hole collsion
-			var direction = (player.spit_destination - player.global_position).normalized()
-			player.velocity = direction * SPIT_SPEED
+			player.set_collision_mask_value(2, false) # disable mob collision
+			player.velocity = player.spit_direction * SPIT_SPEED
 			player.move_and_slide()
-			if player.global_position.distance_to(player.spit_destination) < 5:
+			player.animated_sprite.rotation += TAU * delta
+			if player.spit_timer.time_left == 0:
+				player.animated_sprite.rotation = 0
 				player.state = Player.State.NORMAL
+				
+	if player.poison_timer.time_left == 0:
+		player.has_poison = false
+		player.modulate = Color.WHITE
 	
 	var player_being_spat = player.state == Player.State.SPIT
 	camera.global_position = player.global_position
@@ -77,14 +89,14 @@ func _physics_process(delta: float) -> void:
 	# Check bunnies collected
 	var bunnies: Array[Area2D]
 	bunnies.assign(get_tree().get_nodes_in_group("bunny"))
-	if bunnies.is_empty():
-		# TODO: show win window
-		return
-	
 	for bunny in bunnies:
 		if bunny.overlaps_body(player):
 			bunny.queue_free()
-			camera_pan_bunnies()
+			if bunnies.size() != 1:
+				camera_pan_bunnies()
+			else:
+				won = true
+				show_win_control()
 	
 	# Check grass
 	var player_in_grass := false
@@ -143,9 +155,10 @@ func _physics_process(delta: float) -> void:
 				if mob.kill_area.overlaps_body(player):
 					if player.has_poison:
 						var direction = mob.global_position.direction_to(player.global_position)
-						var destination = mob.global_position + direction.normalized() * SPIT_DISTANCE
-						player.spit_destination = destination
+						player.spit_direction = direction
 						player.state = Player.State.SPIT
+						player.spit_timer.start()
+						mob_animate_spit(mob)
 						mob.state = WanderMob.State.WANDER
 						continue
 					else:
@@ -271,7 +284,7 @@ func kill_player():
 	player.global_position = player_start_position
 
 func camera_pan_bunnies():
-	panning_camera = true
+	panning_bunnies_camera = true
 	save_bunny_label.visible = true
 	save_bunny_label.modulate.a = 0
 	
@@ -287,6 +300,7 @@ func camera_pan_bunnies():
 		var tween := get_tree().create_tween()
 		tween.tween_property(camera, "position", player_start_position, 4)
 		await tween.finished
+		player.global_position = player_start_position
 		await get_tree().create_timer(1).timeout
 	
 	var bunnies = get_tree().get_nodes_in_group("bunny")
@@ -302,4 +316,18 @@ func camera_pan_bunnies():
 		await get_tree().create_timer(1).timeout
 
 	save_bunny_label.visible = false
-	panning_camera = false
+	panning_bunnies_camera = false
+	
+	label_tween = get_tree().create_tween()
+	label_tween.tween_property(movement_label, "modulate:a", 0, 3)
+
+func mob_animate_spit(mob: WanderMob):
+	mob.animated_sprite.play("Spit")
+	await mob.animated_sprite.animation_finished
+	mob.animated_sprite.play("Default")
+	
+func show_win_control():
+	win_control.modulate.a = 0
+	win_control.visible = true
+	var tween := get_tree().create_tween()
+	tween.tween_property(win_control, "modulate:a", 1, 2)
